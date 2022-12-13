@@ -1,0 +1,53 @@
+
+html {
+  background-color: #282c34;
+
+}
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App {
+  display: grid;
+  grid-template-columns: 6fr 6fr;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  grid-auto-rows: 80%;
+  justify-items: stretch;
+  align-items: stretch;
+  padding: 20px;
+}
+
+.App>div:last-child {
+  grid-column: span 2;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.page {
+  border: 1px solid black;
+
+}
+
+#projects {
+  overflow: scroll;
+}
+
+h1 {
+  text-align: center;
+  color: #61dafb;
+
+}
+
+li, p, h2, h3, h4, h5 {
+  color: white;
+}
