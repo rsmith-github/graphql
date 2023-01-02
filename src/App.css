@@ -40,6 +40,11 @@ html {
   grid-row: 2 / 3;
 }
 
+
+text {
+  transform: scaleY(1);
+}
+
 /* .App>div:last-child {
   grid-column: span 2;
 } */

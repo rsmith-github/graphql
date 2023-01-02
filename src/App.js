@@ -4,7 +4,11 @@ import React from "react";
 import { request, gql } from "graphql-request";
 import { useQuery, QueryClient, QueryClientProvider } from "react-query";
 
-import LineChart from './LineChart';
+// import LineChart from './LineChart';
+
+import LineChart from "./components/LineChart";
+import Label from "./components/AxisLabel";
+import ChartTitle from "./components/ChartTitle";
 
 const client = new QueryClient();
 const endpoint = "https://learn.01founders.co/api/graphql-engine/v1/graphql";
@@ -116,6 +120,17 @@ export function Projects() {
     </div >
   );
 }
+
+
+
+const styles = {
+  chartComponentsContainer: {
+    display: 'grid', gridTemplateColumns: 'max-content 700px', alignItems: 'center'
+  },
+  chartWrapper: { maxWidth: 700, alignSelf: 'flex-start' }
+}
+
+
 export function Graphs() {
 
   const PROJECTS_QUERY = `
@@ -137,21 +152,59 @@ export function Graphs() {
     return request(endpoint, PROJECTS_QUERY);
   });
 
+
   if (isLoading) return "Loading...";
   if (error) return <pre>{error.message}</pre>;
 
 
+
+  let ind = 0;
+  const Data = [];
+
+
+  data.transaction.forEach(transaction => {
+    let temp = {
+      label: transaction.object.name,
+      x: ind,
+      y: transaction.amount
+    };
+    Data.push(temp)
+    ind++;
+  });
+
   return (
     <div className='page' id='graphs'>
       <h2>XP in Piscine-Go (graph)</h2>
-      <LineChart
+      {/* <LineChart
         // object.name and amount
         xyPoints={data}
+      /> */}
+      <LineChart
+        width={500}
+        height={300}
+        data={Data}
+        horizontalGuides={5}
+        precision={2}
+        verticalGuides={10}
       />
-
     </div >
   );
 }
 
 
 export default App;
+
+
+
+// different query
+// user(where: { id: { _eq: 1954 }}){
+//   id
+//   login
+// }
+// result(where: { userId: { _eq: 1954 } }){
+//   userId
+//   userLogin	
+//   type
+//   grade
+//   path
+// }
