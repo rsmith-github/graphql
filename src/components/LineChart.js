@@ -93,31 +93,30 @@ const LineChart = ({
   };
 
   const LabelsXAxis = () => {
-    const y = height - padding + FONT_SIZE * 2;
+    const y = height - padding + FONT_SIZE * 2 - 15;
 
     return data.map((element, index) => {
       const x =
         (element.x / maximumXFromData) * chartWidth + padding - FONT_SIZE / 2;
 
-      const coords = `rotate(90, ${x}, ${y})`
-      console.log(coords);
 
       return (
-        <text
-          key={index}
-          x={x}
-          y={y}
-          // textAnchor={'middle'}
-          className="xtext"
-          style={{
-            fill: "#808080",
-            fontSize: FONT_SIZE,
-            fontFamily: "Helvetica",
-            transform: `rotate(90, ${x}, ${y})`,
-          }}
-        >
-          {element.label}
-        </text>
+        // https://stackoverflow.com/questions/52930830/is-there-a-way-to-reliably-rotate-svg-text-within-a-resizable-graphic
+        <svg x={x} y={y} style={{ overflow: "visible" }} >
+          <text
+            key={index}
+            // textAnchor={'start'}
+            className="xtext"
+            style={{
+              fill: "#808080",
+              fontSize: FONT_SIZE,
+              fontFamily: "Helvetica",
+              transform: `rotate(90deg)`
+            }}
+          >
+            {element.label}
+          </text>
+        </svg>
       );
     });
   };
@@ -149,7 +148,7 @@ const LineChart = ({
 
   return (
     <svg
-      viewBox={`0 0 ${width} ${height}`}
+      viewBox={`0 30 ${width} ${height}`}
     //style={{ border: "0.5px solid #ccc" }}
     >
       <XAxis />
