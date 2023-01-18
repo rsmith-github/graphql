@@ -9,6 +9,7 @@ import { useQuery, QueryClient, QueryClientProvider } from "react-query";
 import LineChart from "./components/LineChart";
 import Label from "./components/AxisLabel";
 import ChartTitle from "./components/ChartTitle";
+import BarChart from "./components/BarChart";
 
 const client = new QueryClient();
 const endpoint = "https://learn.01founders.co/api/graphql-engine/v1/graphql";
@@ -63,8 +64,6 @@ export function Profile() {
     </div>
   );
 }
-
-
 // Some other data that will be used to generate a chart.
 export function Ratio() {
 
@@ -86,85 +85,7 @@ export function Ratio() {
   if (error) return <pre>{error.message}</pre>;
 
 
-  // format skills
-  function cleanUpSkills() {
-    data.transaction.forEach(skill => {
-      switch (skill.type) {
-        case "skill_algo":
-          skill.type = "Algorithms"
-          break;
-        case "skill_prog":
-          skill.type = "Programming"
-          break;
-        case "skill_html":
-          skill.type = "HTML"
-          break;
-        case "skill_css":
-          skill.type = "CSS"
-          break;
-        case "skill_js":
-          skill.type = "JavaScript"
-          break;
-        case "skill_go":
-          skill.type = "Golang"
-          break;
-        case "skill_front-end":
-          skill.type = "Frontend"
-          break;
-        case "skill_back-end":
-          skill.type = "Backend"
-          break;
-        case "skill_sql":
-          skill.type = "SQL"
-          break;
-        case "skill_docker":
-          skill.type = "Docker"
-          break;
-        case "skill_sys-admin":
-          skill.type = "Systems Administration"
-          break;
-        case "skill_game":
-          skill.type = "Game Development"
-          break;
-        case "skill_stats":
-          skill.type = "Statistics"
-          break;
-        default:
-          break;
-      }
-    })
-  }
-
-  cleanUpSkills()
-
-  // Get a create an object calculating cumulative skill points and projects done for each one.
-  let skills = {}
-
-  data.transaction.forEach(skill => {
-
-    // Cumulative skill points and projects completed
-    if (!!skills[skill.type]) {
-      skills[skill.type] = {
-        name: skill.type,
-        skill_points: skill.amount + skills[skill.type].skill_points,
-        projects_completed: skills[skill.type].projects_completed + 1
-      }
-
-    } else {
-      skills[skill.type] = {
-        name: skill.type,
-        skill_points: skill.amount,
-        projects_completed: 1
-
-      }
-    }
-
-  });
-
-
-  let skillsArray = Object.values(skills);
-
-  console.log(skillsArray);
+  let skillsArray = cleanUpSkills(data)
 
   return (
     <div className='page top-right' id='ratio'>
@@ -217,14 +138,10 @@ export function Projects() {
   return (
     <div className='page bottom' id='projects'>
       <h2>XP in Piscine-Go</h2>
-      {/* <LineChart 
-          // object.name and amount
-          xyPoints={data}
-      /> */}
 
       {data.transaction.map((project) => (
         <>
-          <p key={project.id}>
+          <p key={"project-" + project.id}>
             <span>Challenge Name: </span>{project.object.name}
           </p>
           <p>
@@ -250,6 +167,8 @@ const styles = {
 
 export function Graph1() {
 
+  const [amount, setAmount] = useState()
+  const [exercise, setExercise] = useState()
   const [show, setShow] = useState(false);
 
 
@@ -278,19 +197,20 @@ export function Graph1() {
 
 
 
-  let ind = 0;
   const Data = [];
 
 
-  data.transaction.forEach(transaction => {
-    let temp = {
-      label: transaction.object.name,
-      x: ind,
-      y: transaction.amount
-    };
-    Data.push(temp)
-    ind++;
+  data.transaction.forEach((transaction, ind) => {
+    if (ind < 30) {
+      let temp = {
+        label: transaction.object.name,
+        x: ind,
+        y: transaction.amount
+      };
+      Data.push(temp)
+    }
   });
+
 
 
   return (
@@ -299,23 +219,37 @@ export function Graph1() {
       {
         show &&
         <>
-          <h2 onClick={() => setShow(!show)}>XP in Piscine-Go (graph)</h2>
+          <h2 onClick={() => setShow(!show)}>XP Gained - First 30 Exercises (Piscine-Go)</h2>
           <LineChart
             width={500}
             height={300}
             data={Data}
-            horizontalGuides={5}
+            horizontalGuides={15}
+            verticalGuides={15}
             precision={2}
-            verticalGuides={10}
+            amount={amount}
+            setAmount={setAmount}
+            exercise={exercise}
+            setExercise={setExercise}
           />
+          {
+            amount &&
+            <p>{exercise}: <span>{amount}</span></p>
+          }
+          {
+            !amount &&
+            <p>Exercise: <span>N/A</span> </p>
+          }
         </>
       }
+
       {
-        !show && <h2 onClick={() => setShow(!show)}>XP in Piscine-Go</h2>
+        !show && <p onClick={() => setShow(!show)} id="titleGraph1">XP in Piscine-Go</p>
       }
     </div >
   );
 }
+
 export function Graph2() {
 
   const PROJECTS_QUERY = `
@@ -331,19 +265,111 @@ export function Graph2() {
     return request(endpoint, PROJECTS_QUERY);
   });
 
-
   if (isLoading) return "Loading...";
   if (error) return <pre>{error.message}</pre>;
 
-
+  let skillsArray = cleanUpSkills(data)
 
   return (
     <div className='page' id='Graph2'>
       <h2>Another chart</h2>
 
+      <BarChart data={skillsArray} />
+
     </div >
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+// format skills and return cumulative skill points for each skill.
+function cleanUpSkills(data) {
+  data.transaction.forEach(skill => {
+    switch (skill.type) {
+      case "skill_algo":
+        skill.type = "Algorithms"
+        break;
+      case "skill_prog":
+        skill.type = "Programming"
+        break;
+      case "skill_html":
+        skill.type = "HTML"
+        break;
+      case "skill_css":
+        skill.type = "CSS"
+        break;
+      case "skill_js":
+        skill.type = "JavaScript"
+        break;
+      case "skill_go":
+        skill.type = "Golang"
+        break;
+      case "skill_front-end":
+        skill.type = "Frontend"
+        break;
+      case "skill_back-end":
+        skill.type = "Backend"
+        break;
+      case "skill_sql":
+        skill.type = "SQL"
+        break;
+      case "skill_docker":
+        skill.type = "Docker"
+        break;
+      case "skill_sys-admin":
+        skill.type = "Systems Administration"
+        break;
+      case "skill_game":
+        skill.type = "Game Development"
+        break;
+      case "skill_stats":
+        skill.type = "Statistics"
+        break;
+      default:
+        break;
+    }
+  })
+
+  let skills = {}
+
+  data.transaction.forEach(skill => {
+
+    // Cumulative skill points and projects completed
+    if (!!skills[skill.type]) {
+      skills[skill.type] = {
+        name: skill.type,
+        skill_points: skill.amount + skills[skill.type].skill_points,
+        projects_completed: skills[skill.type].projects_completed + 1
+      }
+
+    } else {
+      skills[skill.type] = {
+        name: skill.type,
+        skill_points: skill.amount,
+        projects_completed: 1
+
+      }
+    }
+
+  });
+
+  return Object.values(skills);
+
+
+}
+
+
+
+
+
 
 
 export default App;

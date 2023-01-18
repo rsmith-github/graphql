@@ -49,32 +49,60 @@ html {
 #Graph1 {
   grid-column: 1 / 2;
   grid-row: 3 / 3;
-  height: 450px;
+  height: 510px;
   overflow: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-bottom: 30px;
 }
 
 #Graph1 h2 {
   cursor: pointer;
+  margin-bottom: 0;
+}
+
+#titleGraph1 {
+  cursor: pointer;
+  font-size: 50px !important;
+}
+
+#Graph1 h2:hover, #titleGraph1:hover {
+  color: #bebebe;
+}
+
+#Graph1 p {
+  font-size: larger;
+  font-weight: bold;
+}
+#Graph1 span {
+  color: #61dafb;
 }
 
 #Graph2 {
   grid-column: 2 / 2;
   grid-row: 3 / 3;
-  height: 450px;
-  padding-bottom: 30px;
+  height: 510px;
 
 }
 
+.graph2 {
+  transform: translateY(24px) translateX(50px);
+}
 
+/*
 text {
-  transform: scaleY(1);
-  /* transform: translate(80, 80) rotate(90deg, 49, 266) !important; */
+  cursor: pointer;
+  transform: rotate(90deg);
 }
+
+text:hover {
+    transform: rotate(0deg) ;
+    transition: transform 0.3s ease-in-out;
+    font-size: 15px !important;
+}
+
+*/
 
 /* .App>div:last-child {
   grid-column: span 2;
@@ -85,8 +113,23 @@ text {
 }
 
 .page {
-  border: 1px solid black;
+  z-index: 1; /* Bring the div to the front */
+  transform: scale3d(0.8, 0.8, 1.2);
+  transition: transform 0.5s ease-in-out;
+  border-radius: 20px;
+  background-color:#00000063;
+  
+}
 
+::-webkit-scrollbar {
+  background: transparent;  /* Optional: just make scrollbar invisible */
+}
+
+.page:hover {
+  
+  transform: scale3d(1, 1, 1);
+  box-shadow: rgba(3, 254, 229, 0.209) 0px 7px 29px 0px;
+  transition: transform 0.5s ease-in-out;
 }
 
 #projects {

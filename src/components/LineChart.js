@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useState } from 'react';
+import { NoUndefinedVariablesRule } from "graphql";
 
 const STROKE = 1;
 
@@ -9,27 +11,42 @@ const LineChart = ({
   width,
   horizontalGuides: numberOfHorizontalGuides,
   verticalGuides: numberOfVerticalGuides,
-  precision
+  precision,
+  amount,
+  setAmount,
+  exercise,
+  setExercise,
 }) => {
-  const FONT_SIZE = width / 50;
-  const maximumXFromData = Math.max(...data.map(e => e.x));
-  const maximumYFromData = Math.max(...data.map(e => e.y));
+  const FONT_SIZE = width / 50; // font size based on width
+  const maximumXFromData = Math.max(...data.map(e => e.x)); // Getting the largest x value. (as formatted from data)
+  const maximumYFromData = Math.max(...data.map(e => e.y)); // Getting the largest y value. e.g. 3438 for xp in piscine-go
 
-  const digits =
-    parseFloat(maximumYFromData.toString()).toFixed(precision).length + 1;
+  // Get maxY with 2 decimals precision.
+  const digits = parseFloat(maximumYFromData.toString()).toFixed(precision).length + 1;
 
-  const padding = (FONT_SIZE + digits) * 3;
-  const chartWidth = width - padding * 2;
-  const chartHeight = height - padding * 2;
+  const padding = (FONT_SIZE + digits) * 3; // padding should be font size + digits * 3. Not sure why? must test.
+  const chartWidth = width - padding * 2; // chart width should be width - padding * 2 
+  const chartHeight = height - padding * 2; // height  should be height - padding - 2
 
-  const points = data
-    .map(element => {
-      const x = (element.x / maximumXFromData) * chartWidth + padding;
-      const y =
-        chartHeight - (element.y / maximumYFromData) * chartHeight + padding;
-      return `${x},${y}`;
-    })
-    .join(" ");
+
+
+  // Data is a list of objects:
+  // data.transaction.forEach(transaction => {
+  //   let temp = {
+  //     label: transaction.object.name,
+  //     x: ind,
+  //     y: transaction.amount
+  //   };
+  //   Data.push(temp)
+  //   ind++;
+  // });
+
+  const points = data.map(element => {
+    const x = (element.x / maximumXFromData) * chartWidth + padding;
+    const y = chartHeight - (element.y / maximumYFromData) * chartHeight + padding;
+
+    return `${x},${y}`;
+  }).join(" ");
 
   const Axis = ({ points }) => (
     <polyline fill="none" stroke="#ccc" strokeWidth=".5" points={points} />
@@ -38,8 +55,7 @@ const LineChart = ({
   const XAxis = () => (
     <Axis
       points={`${padding},${height - padding} ${width - padding},${height -
-        padding}`}
-    />
+        padding}`} />
   );
 
   const YAxis = () => (
@@ -93,33 +109,52 @@ const LineChart = ({
   };
 
   const LabelsXAxis = () => {
-    const y = height - padding + FONT_SIZE * 2 - 15;
+    const y = height - padding + FONT_SIZE * 2;
 
     return data.map((element, index) => {
       const x =
         (element.x / maximumXFromData) * chartWidth + padding - FONT_SIZE / 2;
 
+      const [hover, setHover] = useState()
 
       return (
         // https://stackoverflow.com/questions/52930830/is-there-a-way-to-reliably-rotate-svg-text-within-a-resizable-graphic
-        <svg x={x} y={y} style={{ overflow: "visible" }} >
+        <svg x={x} y={y - 15}
+          style={{
+            overflow: "visible",
+            height: '5px',
+            width: '5px',
+          }}
+        >
           <text
-            key={index}
-            // textAnchor={'start'}
-            className="xtext"
+            onMouseEnter={() => {
+
+              setHover(true)
+
+            }}
+            onClick={() => {
+              setAmount(element.y)
+              setExercise(element.label)
+            }}
+            onMouseLeave={() => setHover(false)}
+            key={"text-" + index}
+            className={`xtext`}
             style={{
-              fill: "#808080",
-              fontSize: FONT_SIZE,
+              fill: hover ? "#61dafb" : "white",
+              fontSize: hover ? FONT_SIZE + 1 : FONT_SIZE,
               fontFamily: "Helvetica",
-              transform: `rotate(90deg)`
+              transform: 'rotate(45deg)',
+              cursor: "pointer",
             }}
           >
             {element.label}
           </text>
         </svg>
+
       );
     });
   };
+
 
   const LabelsYAxis = () => {
     const PARTS = numberOfHorizontalGuides;
@@ -135,7 +170,7 @@ const LineChart = ({
           x={x}
           y={yCoordinate}
           style={{
-            fill: "#808080",
+            fill: "white",
             fontSize: FONT_SIZE,
             fontFamily: "Helvetica"
           }}
@@ -160,7 +195,7 @@ const LineChart = ({
 
       <polyline
         fill="none"
-        stroke="#0074d9"
+        stroke="#61dafb"
         strokeWidth={STROKE}
         points={points}
       />
