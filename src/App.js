@@ -5,6 +5,10 @@ import { useState, useEffect } from 'react';
 import { request, gql } from "graphql-request";
 import { useQuery, QueryClient, QueryClientProvider } from "react-query";
 
+// Carousel
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import 'pure-react-carousel/dist/react-carousel.es.css';
+
 // import LineChart from './LineChart';
 import LineChart from "./components/LineChart";
 import Label from "./components/AxisLabel";
@@ -18,7 +22,15 @@ function App() {
 
   return (
     <QueryClientProvider client={client}>
-      <h1>GraphQL</h1>
+
+      <div class="patterns">
+        <svg width="100%" height="30%">
+          <text x="50%" y="80%" text-anchor="middle"  >
+            GraphQL
+          </text>
+        </svg>
+      </div>
+
       <div className="App">
         <Profile />
         <Ratio />
@@ -64,7 +76,8 @@ export function Profile() {
     </div>
   );
 }
-// Some other data that will be used to generate a chart.
+
+// Skills data (carousel)
 export function Ratio() {
 
   const SKILLS_QUERY = `
@@ -88,9 +101,15 @@ export function Ratio() {
   let skillsArray = cleanUpSkills(data)
 
   return (
-    <div className='page top-right' id='ratio'>
+    <div className='page top-center' id='ratio'>
       <h2>Skills</h2>
-      {skillsArray.map((skill) => (
+      <CarouselProvider
+        naturalSlideWidth={100}
+        naturalSlideHeight={20}
+        totalSlides={skillsArray.length}
+        infinite={true}
+      >
+        {/* {skillsArray.map((skill, ind) => (
         <>
           <p className='skill-type'>
             {skill.name}
@@ -103,8 +122,32 @@ export function Ratio() {
           </p>
           <br></br>
         </>
-      ))}
+      ))} */}
+        <Slider>
+
+          {skillsArray.map((skill, ind) => (
+            <Slide index={ind}>
+              <p className='skill-type' style={{ color: `${skill.color}`, textAlign: 'center', fontSize: "25px", marginBottom: '10px' }}>
+                {skill.name}
+              </p>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '30px' }}>
+                <p>
+                  <span>Total Skill Points: </span> <span className='number'>{skill.skill_points}</span>
+                </p>
+                <p>
+                  <span>Projects completed: </span> <span className='number'>{skill.projects_completed}</span>
+                </p>
+              </div>
+            </Slide>
+          ))}
+        </Slider>
+        <div className='crslBtnContainer'>
+          <ButtonBack className='sliderBtn'>&#8249;</ButtonBack>
+          <ButtonNext className='sliderBtn'>&#8250;</ButtonNext>
+        </div>
+      </CarouselProvider>
     </div>
+
   );
 }
 
@@ -136,21 +179,21 @@ export function Projects() {
 
 
   return (
-    <div className='page bottom' id='projects'>
+    <div className='page top-right' id='projects'>
       <h2>XP in Piscine-Go</h2>
-
-      {data.transaction.map((project) => (
-        <>
-          <p key={"project-" + project.id}>
-            <span>Challenge Name: </span>{project.object.name}
-          </p>
-          <p>
-            <span>XP: </span>{project.amount}
-          </p>
-          <br></br>
-        </>
-      ))}
-
+      <div style={{ overflow: 'auto', height: '185px' }}>
+        {data.transaction.map((project) => (
+          <div>
+            <p key={"project-" + project.id}>
+              <span>Challenge Name: </span>{project.object.name}
+            </p>
+            <p>
+              <span>XP: </span>{project.amount} <span>kB</span>
+            </p>
+            <br></br>
+          </div>
+        ))}
+      </div>
     </div >
   );
 }
@@ -169,7 +212,6 @@ export function Graph1() {
 
   const [amount, setAmount] = useState()
   const [exercise, setExercise] = useState()
-  const [show, setShow] = useState(false);
 
 
   const PROJECTS_QUERY = `
@@ -215,37 +257,30 @@ export function Graph1() {
 
   return (
 
-    <div className='page' id='Graph1'>
-      {
-        show &&
-        <>
-          <h2 onClick={() => setShow(!show)}>XP Gained - First 30 Exercises (Piscine-Go)</h2>
-          <LineChart
-            width={500}
-            height={300}
-            data={Data}
-            horizontalGuides={15}
-            verticalGuides={15}
-            precision={2}
-            amount={amount}
-            setAmount={setAmount}
-            exercise={exercise}
-            setExercise={setExercise}
-          />
-          {
-            amount &&
-            <p>{exercise}: <span>{amount}</span></p>
-          }
-          {
-            !amount &&
-            <p>Exercise: <span>N/A</span> </p>
-          }
-        </>
-      }
-
-      {
-        !show && <p onClick={() => setShow(!show)} id="titleGraph1">XP in Piscine-Go</p>
-      }
+    <div className='page bottom-left' id='Graph1'>
+      <>
+        <h2>XP Gained - First 30 Exercises (Piscine-Go)</h2>
+        <LineChart
+          width={500}
+          height={300}
+          data={Data}
+          horizontalGuides={15}
+          verticalGuides={15}
+          precision={2}
+          amount={amount}
+          setAmount={setAmount}
+          exercise={exercise}
+          setExercise={setExercise}
+        />
+        {
+          amount &&
+          <p>{exercise}: <span>{amount}</span></p>
+        }
+        {
+          !amount &&
+          <p>Exercise: <span>N/A</span> </p>
+        }
+      </>
     </div >
   );
 }
@@ -271,8 +306,8 @@ export function Graph2() {
   let skillsArray = cleanUpSkills(data)
 
   return (
-    <div className='page' id='Graph2'>
-      <h2>Another chart</h2>
+    <div className='page bottom-right' id='Graph2'>
+      <h2>Skills Chart</h2>
 
       <BarChart data={skillsArray} />
 
@@ -296,42 +331,56 @@ function cleanUpSkills(data) {
     switch (skill.type) {
       case "skill_algo":
         skill.type = "Algorithms"
+        skill.color = "teal"
         break;
       case "skill_prog":
         skill.type = "Programming"
+        skill.color = "#306998"
         break;
       case "skill_html":
         skill.type = "HTML"
+        skill.color = "#e34c26"
         break;
       case "skill_css":
         skill.type = "CSS"
+        skill.color = "#264de4"
         break;
       case "skill_js":
         skill.type = "JavaScript"
+        skill.color = "#F0DB4F"
         break;
       case "skill_go":
         skill.type = "Golang"
+        skill.color = "#29BEB0"
         break;
       case "skill_front-end":
         skill.type = "Frontend"
+        skill.color = "#a4c639"
+
         break;
       case "skill_back-end":
         skill.type = "Backend"
+        skill.color = "firebrick"
         break;
       case "skill_sql":
         skill.type = "SQL"
+        skill.color = "#b100cd"
         break;
       case "skill_docker":
         skill.type = "Docker"
+        skill.color = "#0db7ed"
         break;
       case "skill_sys-admin":
         skill.type = "Systems Administration"
+        skill.color = "#DBE4EB"
         break;
       case "skill_game":
         skill.type = "Game Development"
+        skill.color = "deeppink"
         break;
       case "skill_stats":
         skill.type = "Statistics"
+        skill.color = "green"
         break;
       default:
         break;
@@ -347,15 +396,16 @@ function cleanUpSkills(data) {
       skills[skill.type] = {
         name: skill.type,
         skill_points: skill.amount + skills[skill.type].skill_points,
-        projects_completed: skills[skill.type].projects_completed + 1
+        projects_completed: skills[skill.type].projects_completed + 1,
+        color: skill.color
       }
 
     } else {
       skills[skill.type] = {
         name: skill.type,
         skill_points: skill.amount,
-        projects_completed: 1
-
+        projects_completed: 1,
+        color: skill.color
       }
     }
 
