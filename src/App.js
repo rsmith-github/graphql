@@ -23,9 +23,10 @@ function App() {
   return (
     <QueryClientProvider client={client}>
 
+      {/* https://codepen.io/ANAMAFLA/pen/eYJbGpd */}
       <div class="patterns">
         <svg width="100%" height="30%">
-          <text x="50%" y="80%" text-anchor="middle"  >
+          <text x="50%" y="80%" text-anchor="middle">
             GraphQL
           </text>
         </svg>
@@ -62,7 +63,11 @@ export function Profile() {
     return request(endpoint, USERS_QUERY);
   });
 
-  if (isLoading) return "Loading...";
+  if (isLoading) return (
+    <div className='page top-left' id='profile'>
+      <p>Loading...</p>
+    </div>
+  );
   if (error) return <pre>{error.message}</pre>;
 
   return (
@@ -94,7 +99,11 @@ export function Ratio() {
     return request(endpoint, SKILLS_QUERY);
   });
 
-  if (isLoading) return "Loading...";
+  if (isLoading) return (
+    <div className='page top-center' id='profile'>
+      <p>Loading...</p>
+    </div>
+  );
   if (error) return <pre>{error.message}</pre>;
 
 
@@ -174,7 +183,12 @@ export function Projects() {
     return request(endpoint, PROJECTS_QUERY);
   });
 
-  if (isLoading) return "Loading...";
+  if (isLoading) return (
+    <div className='page top-right' id='projects'>
+      <p>Loading...</p>
+    </div>
+
+  );
   if (error) return <pre>{error.message}</pre>;
 
 
@@ -234,7 +248,13 @@ export function Graph1() {
   });
 
 
-  if (isLoading) return "Loading...";
+  if (isLoading) return (
+
+    <div className='page bottom-left' id='Graph1'>
+      <p>Loading...</p>
+    </div>
+
+  );
   if (error) return <pre>{error.message}</pre>;
 
 
@@ -296,11 +316,17 @@ export function Graph2() {
   }
   `;
 
-  const { data, isLoading, error } = useQuery("idk", () => {
+  const { data, isLoading, error } = useQuery("skillsGraph2", () => {
     return request(endpoint, PROJECTS_QUERY);
   });
 
-  if (isLoading) return "Loading...";
+  if (isLoading) return (
+
+    <div className='page bottom-right' id='Graph2'>
+      <p>Loading...</p>
+    </div>
+
+  );
   if (error) return <pre>{error.message}</pre>;
 
   let skillsArray = cleanUpSkills(data)
