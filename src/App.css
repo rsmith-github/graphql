@@ -116,6 +116,16 @@ h1, h2, h3, h4, h5 {
   padding: 0px 15px 0px 15px; 
 }
 
+.schoolName {
+  display: inline-block;
+}
+.schoolName::first-letter {
+  text-transform: capitalize;
+}
+
+.campusText {
+  color: white;
+}
 /* Line graph */
 
 #titleGraph1 {

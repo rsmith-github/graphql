@@ -73,11 +73,13 @@ export function Profile() {
   return (
     <div className='page top-left' id='profile'>
       {data.user.map((user) => (
-        <h2 id='profile-header'>ID: {user.id}, Login: {user.login}</h2>
+        <><h2 id='profile-header'>ID: <span style={{ color: 'white' }}>{user.id}</span></h2><h2>Login: <span style={{ color: 'white' }}>{user.login}</span></h2></>
       ))}
+      <br></br>
       {data.transaction.filter((transaction, index) => transaction.amount === 19).map((transaction) => (
-        <h2 id='level'>{transaction.type}: {transaction.amount}</h2>
+        <h2 id='level'>{transaction.type}: <span style={{ color: 'white' }}>{transaction.amount}</span></h2>
       ))}
+      <School />
     </div>
   );
 }
@@ -342,10 +344,33 @@ export function Graph2() {
 }
 
 
+export function School() {
+  const SCHOOL_QUERY = `
+  {
+    result{
+      path
+    }
+  }
+  `
 
+  const { data, isLoading, error } = useQuery("schoolQuery", () => {
+    return request(endpoint, SCHOOL_QUERY)
+  })
 
+  if (isLoading) return (
+    <p>...</p>
+  );
+  if (error) return <pre>{error.message}</pre>;
 
+  console.log(data);
+  return (
+    <>
+      <span className='campusText'>Campus: &nbsp;</span>
+      <p className='schoolName'>{data.result[0].path.split("/")[1]}</p>
+    </>
+  )
 
+}
 
 
 
