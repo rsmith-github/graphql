@@ -4,6 +4,8 @@ import React from "react";
 import { useState, useEffect } from 'react';
 import { request, gql } from "graphql-request";
 import { useQuery, QueryClient, QueryClientProvider } from "react-query";
+import { MediaQuery } from "react-responsive";
+
 
 // Carousel
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
@@ -65,7 +67,7 @@ export function Profile() {
 
   if (isLoading) return (
     <div className='page top-left' id='profile'>
-      <p>Loading...</p>
+      {/* <p>Loading...</p> */}
     </div>
   );
   if (error) return <pre>{error.message}</pre>;
@@ -103,7 +105,7 @@ export function Ratio() {
 
   if (isLoading) return (
     <div className='page top-center' id='profile'>
-      <p>Loading...</p>
+      {/* <p>Loading...</p> */}
     </div>
   );
   if (error) return <pre>{error.message}</pre>;
@@ -116,7 +118,7 @@ export function Ratio() {
       <h2>Skills</h2>
       <CarouselProvider
         naturalSlideWidth={100}
-        naturalSlideHeight={20}
+        naturalSlideHeight={28}
         totalSlides={skillsArray.length}
         infinite={true}
       >
@@ -187,7 +189,7 @@ export function Projects() {
 
   if (isLoading) return (
     <div className='page top-right' id='projects'>
-      <p>Loading...</p>
+      {/* <p>Loading...</p> */}
     </div>
 
   );
@@ -253,7 +255,7 @@ export function Graph1() {
   if (isLoading) return (
 
     <div className='page bottom-left' id='Graph1'>
-      <p>Loading...</p>
+      {/* <p>Loading...</p> */}
     </div>
 
   );
@@ -325,7 +327,7 @@ export function Graph2() {
   if (isLoading) return (
 
     <div className='page bottom-right' id='Graph2'>
-      <p>Loading...</p>
+      {/* <p>Loading...</p> */}
     </div>
 
   );
@@ -358,11 +360,10 @@ export function School() {
   })
 
   if (isLoading) return (
-    <p>...</p>
+    <p></p>
   );
   if (error) return <pre>{error.message}</pre>;
 
-  console.log(data);
   return (
     <>
       <span className='campusText'>Campus: &nbsp;</span>

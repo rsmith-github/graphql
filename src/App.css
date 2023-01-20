@@ -216,3 +216,19 @@ h1, h2, h3, h4, h5 {
 p {
   color:rgba(255, 255, 255, 0.708);
 }
+
+
+/* Responsive */
+
+@media (max-width: 876px) {
+  .page {
+    grid-column-end: span 4;
+    
+  }
+  #Graph1, #Graph2 {
+    height: 300px;
+  }
+  .crslBtnContainer {
+    /* display: none; */
+  }
+}
