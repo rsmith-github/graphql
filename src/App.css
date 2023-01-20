@@ -228,7 +228,16 @@ p {
   #Graph1, #Graph2 {
     height: 300px;
   }
-  .crslBtnContainer {
-    /* display: none; */
+}
+
+
+@media (max-width: 444px) {
+  .sldr-slide {
+    height: 150px !important;
+  }
+}
+@media (max-width: 378px) {
+  .bottom-right {
+    display: none;
   }
 }

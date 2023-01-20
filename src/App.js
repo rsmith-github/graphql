@@ -2,9 +2,9 @@ import './App.css';
 
 import React from "react";
 import { useState, useEffect } from 'react';
-import { request, gql } from "graphql-request";
+import { request } from "graphql-request";
 import { useQuery, QueryClient, QueryClientProvider } from "react-query";
-import { MediaQuery } from "react-responsive";
+import MediaQuery from "react-responsive";
 
 
 // Carousel
@@ -13,8 +13,6 @@ import 'pure-react-carousel/dist/react-carousel.es.css';
 
 // import LineChart from './LineChart';
 import LineChart from "./components/LineChart";
-import Label from "./components/AxisLabel";
-import ChartTitle from "./components/ChartTitle";
 import BarChart from "./components/BarChart";
 
 const client = new QueryClient();
@@ -118,28 +116,14 @@ export function Ratio() {
       <h2>Skills</h2>
       <CarouselProvider
         naturalSlideWidth={100}
-        naturalSlideHeight={28}
+        naturalSlideHeight={27}
         totalSlides={skillsArray.length}
         infinite={true}
       >
-        {/* {skillsArray.map((skill, ind) => (
-        <>
-          <p className='skill-type'>
-            {skill.name}
-          </p>
-          <p>
-            <span>Total Skill Points: </span>{skill.skill_points}
-          </p>
-          <p>
-            <span>Projects/Exercises completed: </span>{skill.projects_completed}
-          </p>
-          <br></br>
-        </>
-      ))} */}
         <Slider>
 
           {skillsArray.map((skill, ind) => (
-            <Slide index={ind}>
+            <Slide index={ind} className={"sldr-slide"}>
               <p className='skill-type' style={{ color: `${skill.color}`, textAlign: 'center', fontSize: "25px", marginBottom: '10px' }}>
                 {skill.name}
               </p>

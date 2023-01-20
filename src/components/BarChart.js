@@ -13,17 +13,17 @@ const Chart = ({ children, height, width }) => {
             </MediaQuery>
 
             <MediaQuery minWidth={1029} maxWidth={1270}>
-                <svg viewBox={`-100 0 ${width + 100} ${height + 100}`} height={height} width={width-150} className="graph2">
+                <svg viewBox={`-100 0 ${width + 100} ${height + 100}`} height={height} width={width - 150} className="graph2">
                     {children}
                 </svg>
             </MediaQuery>
-            
+
             <MediaQuery minWidth={875} maxWidth={1028}>
-                <svg viewBox={`-125 0 ${width + 100} ${height + 100}`} height={height} width={width-250} className="graph2">
+                <svg viewBox={`-125 0 ${width + 100} ${height + 100}`} height={height} width={width - 250} className="graph2">
                     {children}
                 </svg>
             </MediaQuery>
-            
+
 
             <MediaQuery minWidth={600} maxWidth={875}>
                 <svg viewBox={`60 70 ${width + 50} ${height + 100}`} height={height - 100} width={width + 150} className="graph2">
@@ -31,8 +31,13 @@ const Chart = ({ children, height, width }) => {
                 </svg>
             </MediaQuery>
 
-            <MediaQuery maxWidth={599}>
+            <MediaQuery minWidth={401} maxWidth={599}>
                 <svg viewBox={`100 70 ${width + 50} ${height + 100}`} height={height - 100} width={width - 50} className="graph2">
+                    {children}
+                </svg>
+            </MediaQuery>
+            <MediaQuery maxWidth={400}>
+                <svg viewBox={`190 -34 ${width - 200} ${height + 200}`} height={height - 120} width={width - 200} className="graph2">
                     {children}
                 </svg>
             </MediaQuery>
