@@ -234,7 +234,15 @@ p {
 @media (max-width: 444px) {
   .sldr-slide {
     height: 150px !important;
+    
   }
+}
+
+@media (max-width: 490px) {
+  .graph2 {
+    transform: translateY(24px) translateX(0px) !important;
+  }
+  
 }
 @media (max-width: 378px) {
   .bottom-right {
