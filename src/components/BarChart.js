@@ -32,7 +32,7 @@ const Chart = ({ children, height, width }) => {
             </MediaQuery>
 
             <MediaQuery minWidth={401} maxWidth={599}>
-                <svg viewBox={`-100 70 ${width + 50} ${height + 100}`} height={height - 100} width={width - 200} className="graph2">
+                <svg viewBox={`-60 70 ${width + 50} ${height + 100}`} height={height - 100} width={width - 200} className="graph2">
                     {children}
                 </svg>
             </MediaQuery>
